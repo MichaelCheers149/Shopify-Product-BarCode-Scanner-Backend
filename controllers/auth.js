@@ -32,7 +32,7 @@ const signup = async (req, res) => {
           } else if (passwordHash) {
             return User.create({
               email: req.body.email,
-              username: req.body.name,
+              username: req.body.username,
               password: passwordHash,
             })
               .then(() => {
