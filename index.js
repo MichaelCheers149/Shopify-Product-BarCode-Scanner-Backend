@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
-const { isAuth, isAdmin } = require("./controllers/auth");
+const { isAdmin } = require("./middleware/auth");
 
 require("dotenv").config();
 require("./config/db")();

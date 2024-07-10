@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
-const roles = require("../config/role");
 
 const signup = async (req, res) => {
   // checks if email already exists
@@ -117,34 +116,8 @@ const isAuth = (req, res, next) => {
   if (!decodedToken) {
     res.status(401).json({ message: "unauthorized" });
   } else {
-    next();
+    res.json({ message: "Authenticated!" });
   }
 };
 
-const isAdmin = async (req, res, next) => {
-  const authHeader = req.get("Authorization");
-  if (!authHeader) {
-    return res.status(401).json({ message: "Not authenticated" });
-  }
-  const token = authHeader.split(" ")[1];
-  let decodedToken;
-  try {
-    decodedToken = jwt.verify(token, "secret");
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ message: err.message || "Could not decode the token" });
-  }
-  if (!decodedToken) {
-    res.status(401).json({ message: "unauthorized" });
-  } else {
-    let user = await User.findOne({ username: decodedToken?.username });
-    if (user && user.role === roles.admin) {
-      return next();
-    } else {
-      res.status(401).json({ message: "Unauthorized" });
-    }
-  }
-};
-
-module.exports = { login, signup, isAuth, isAdmin };
+module.exports = { login, signup };
