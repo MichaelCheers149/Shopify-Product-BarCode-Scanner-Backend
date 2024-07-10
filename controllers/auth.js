@@ -18,7 +18,14 @@ const signup = async (req, res) => {
     if (dbUser) {
       return res.status(409).json({ message: "Username already exists" });
     } else {
-      if (req.body.email && req.body.password && req.body.username) {
+      if (
+        req.body.email &&
+        req.body.email !== "" &&
+        req.body.password &&
+        req.body.password !== "" &&
+        req.body.username &&
+        req.body.username !== ""
+      ) {
         // password hash
         bcrypt.hash(req.body.password, 12, (err, passwordHash) => {
           if (err) {
@@ -42,11 +49,11 @@ const signup = async (req, res) => {
               });
           }
         });
-      } else if (!req.body.password) {
+      } else if (!req.body.password || req.body.password === "") {
         return res.status(400).json({ message: "Password not provided" });
-      } else if (!req.body.email) {
+      } else if (!req.body.email || req.body.email === "") {
         return res.status(400).json({ message: "Email not provided" });
-      } else if (!req.body.username) {
+      } else if (!req.body.username || req.body.username === "") {
         return res.status(400).json({ message: "Username not provided" });
       }
     }
