@@ -6,18 +6,14 @@ const roles = require("../config/role");
 const signup = async (req, res) => {
   // checks if email already exists
   let dbUser = await User.findOne({
-    where: {
-      email: req.body.email,
-    },
+    email: req.body.email,
   });
 
   if (dbUser) {
     return res.status(409).json({ message: "Email already exists" });
   } else {
     dbUser = await User.findOne({
-      where: {
-        username: req.body.username,
-      },
+      username: req.body.username,
     });
     if (dbUser) {
       return res.status(409).json({ message: "Username already exists" });
@@ -60,16 +56,12 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     let dbUser = await User.findOne({
-      where: {
-        email: req.body.usernameOrEmail,
-      },
+      email: req.body.usernameOrEmail,
     });
 
     if (!dbUser) {
       dbUser = await User.findOne({
-        where: {
-          username: req.body.usernameOrEmail,
-        },
+        username: req.body.usernameOrEmail,
       });
     }
 
