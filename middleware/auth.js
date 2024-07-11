@@ -38,13 +38,13 @@ const isAdmin = async (req, res, next) => {
       .json({ message: err.message || "Could not decode the token" });
   }
   if (!decodedToken) {
-    res.status(401).json({ message: "unauthorized" });
+    res.status(401).json({ message: "Unauthorized!" });
   } else {
     let user = await User.findOne({ username: decodedToken?.username });
     if (user && user.role === roles.admin) {
       return next();
     } else {
-      res.status(401).json({ message: "Unauthorized" });
+      res.status(401).json({ message: "Unauthorized!" });
     }
   }
 };

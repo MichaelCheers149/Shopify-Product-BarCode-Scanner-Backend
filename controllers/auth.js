@@ -99,7 +99,7 @@ const login = async (req, res) => {
   // checks if email exists
 };
 
-const isAuth = (req, res, next) => {
+const isAuth = (req, res) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     return res.status(401).json({ message: "not authenticated" });
@@ -114,10 +114,32 @@ const isAuth = (req, res, next) => {
       .json({ message: err.message || "could not decode the token" });
   }
   if (!decodedToken) {
-    res.status(401).json({ message: "unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
   } else {
     res.json({ message: "Authenticated!" });
   }
 };
 
-module.exports = { login, signup, isAuth };
+const getRole = async (req, res) => {
+  const authHeader = req.get("Authorization");
+  if (!authHeader) {
+    return res.status(401).json({ message: "not authenticated" });
+  }
+  const token = authHeader.split(" ")[1];
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(token, "secret");
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ message: err.message || "could not decode the token" });
+  }
+  if (!decodedToken) {
+    res.status(401).json({ message: "Unauthorized" });
+  } else {
+    let user = await User.findOne({ username: decodedToken?.username });
+    res.json({ message: "success", role: user.role });
+  }
+};
+
+module.exports = { login, signup, isAuth, getRole };
