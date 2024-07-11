@@ -4,7 +4,13 @@ const roles = require("../config/role");
 const getUsers = async (req, res) => {
   try {
     let users = await User.find({});
-    users = users.filter((user) => user.role !== roles.admin);
+    users = users
+      .filter((user) => user.role !== roles.admin)
+      .map((user) => ({
+        id: user._id,
+        username: user.username,
+        role: user.role,
+      }));
     res.json({ message: "Success!", users });
   } catch (error) {
     console.log("error", error);
