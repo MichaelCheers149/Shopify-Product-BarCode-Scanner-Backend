@@ -10,6 +10,7 @@ const getUsers = async (req, res) => {
         id: user._id,
         username: user.username,
         role: user.role,
+        email: user.email,
       }));
     res.json({ message: "Success!", users });
   } catch (error) {
