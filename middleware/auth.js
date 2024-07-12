@@ -24,7 +24,7 @@ const isAuth = (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
-  console.log("request: ", req.body);
+  // console.log("request: ", req.body);
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     return res.status(401).json({ message: "Not authenticated" });
@@ -42,7 +42,7 @@ const isAdmin = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized!" });
   } else {
     let user = await User.findOne({ username: decodedToken?.username });
-    console.log("user: ", user);
+    // console.log("user: ", user);
     if (user && user.role === roles.admin) {
       return next();
     } else {

@@ -20,6 +20,7 @@ const getUsers = async (req, res) => {
 
 const changeRoleOfUser = async (req, res) => {
   const newRole = req.body.role;
+  console.log("changing request: ", req.body);
   if (!roles[newRole])
     return res.status(404).json({ message: "Please input correct role." });
   try {
