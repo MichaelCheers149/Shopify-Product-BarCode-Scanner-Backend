@@ -37,7 +37,7 @@ const changeRoleOfUser = async (req, res) => {
 
 const removeUser = async (req, res) => {
   try {
-    await User.findOneAndDelete({ username: req.body.username });
+    await User.findByIdAndDelete(req.body.id);
     res.json({ message: "Success!" });
   } catch (error) {
     console.log("error", error);
