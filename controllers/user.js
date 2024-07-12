@@ -23,7 +23,7 @@ const changeRoleOfUser = async (req, res) => {
   if (!roles[newRole])
     return res.status(404).json({ message: "Please input correct role." });
   try {
-    let user = await User.findOne({ username: req.body.username });
+    let user = await User.findById(req.body.id);
     if (user && user.role !== roles.admin) {
       user.set({ role: newRole });
       await user.save();
