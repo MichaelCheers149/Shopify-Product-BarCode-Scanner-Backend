@@ -24,6 +24,7 @@ const isAuth = (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
+  console.log("request: ", req.body);
   const authHeader = req.get("Authorization");
   if (!authHeader) {
     return res.status(401).json({ message: "Not authenticated" });
