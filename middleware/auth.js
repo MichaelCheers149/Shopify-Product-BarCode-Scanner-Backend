@@ -41,6 +41,7 @@ const isAdmin = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized!" });
   } else {
     let user = await User.findOne({ username: decodedToken?.username });
+    console.log("user: ", user);
     if (user && user.role === roles.admin) {
       return next();
     } else {
