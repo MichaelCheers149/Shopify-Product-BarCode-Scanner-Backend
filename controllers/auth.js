@@ -38,7 +38,16 @@ const signup = async (req, res) => {
               password: passwordHash,
             })
               .then(() => {
-                res.status(200).json({ message: "User created" });
+                const token = jwt.sign(
+                  { username: req.body.username },
+                  "secret",
+                  {
+                    expiresIn: "24h",
+                  }
+                );
+                res
+                  .status(200)
+                  .json({ message: "User created!", token: token });
               })
               .catch((err) => {
                 console.log(err);
