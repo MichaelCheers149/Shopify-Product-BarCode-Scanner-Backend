@@ -27,6 +27,7 @@ const changeRoleOfUser = async (req, res) => {
     if (user && user.role !== roles.admin) {
       user.set({ role: newRole });
       await user.save();
+      res.json({ message: "Successfully changed!" });
     } else {
       res.status(404).json({ message: "There is not such a user." });
     }
