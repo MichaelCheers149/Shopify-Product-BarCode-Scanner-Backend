@@ -38,7 +38,7 @@ const changeRoleOfUser = async (req, res) => {
 const removeUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.userId);
-    res.json({ message: "Success!" });
+    res.json({ message: "Successfully removed!" });
   } catch (error) {
     console.log("error", error);
   }
