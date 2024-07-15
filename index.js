@@ -3,7 +3,8 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const authRouter = require("./routes/authRoutes");
 const userRouter = require("./routes/userRoutes");
-const { isAdmin } = require("./middleware/auth");
+const productRouter = require("./routes/productRoutes");
+const { isAdmin, isAuth } = require("./middleware/auth");
 
 require("dotenv").config();
 require("./config/db")();
@@ -20,6 +21,7 @@ app.use(cors(corsOptions));
 
 app.use("/auth", authRouter);
 app.use("/user", isAdmin, userRouter);
+app.use("/product", isAuth, productRouter);
 
 const PORT = process.env.PORT || 5000;
 
