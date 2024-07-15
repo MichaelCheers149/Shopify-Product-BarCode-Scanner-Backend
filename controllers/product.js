@@ -30,7 +30,7 @@ const getDetails = async (req, res) => {
     const genre = data.results[0]["genre"];
     const year = data.results[0]["year"];
     const recordLabel = data.results[0]["label"];
-    const category = data.results[0]["format"].map((format) =>
+    const format = data.results[0]["format"].map((format) =>
       format === "DVD" ? "DVDs" : format === "CD" ? "CDs" : format
     );
     const country = data.results[0]["country"];
@@ -43,7 +43,7 @@ const getDetails = async (req, res) => {
       genre,
       year,
       recordLabel,
-      category,
+      format,
       country,
       catalog,
     };
