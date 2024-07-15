@@ -26,7 +26,7 @@ const getDetails = async (req, res) => {
     const genre = data.results[0]["genre"];
     const year = data.results[0]["year"];
     const recordLabel = data.results[0]["label"];
-    const format = data.results[0]["format"];
+    const category = data.results[0]["formats"][0]["name"];
     const country = data.results[0]["country"];
     const catalog = data.results[0]["catno"];
 
@@ -41,7 +41,7 @@ const getDetails = async (req, res) => {
         genre,
         year,
         recordLabel,
-        format,
+        category,
         country,
         catalog,
       },
