@@ -15,6 +15,7 @@ const getUsers = async (req, res) => {
     res.json({ message: "Success!", users });
   } catch (error) {
     console.log("error", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -32,6 +33,7 @@ const changeRoleOfUser = async (req, res) => {
     }
   } catch (error) {
     console.log("error", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -41,6 +43,7 @@ const removeUser = async (req, res) => {
     res.json({ message: "Successfully removed!" });
   } catch (error) {
     console.log("error", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 

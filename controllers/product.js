@@ -52,14 +52,14 @@ const getDetails = async (req, res) => {
     for (let field of metafields) {
       if (Array.isArray(result[field.name])) {
         if (field.type === "string") {
-          scannedData[field.name] = result[field.name][0];
+          details[field.name] = result[field.name][0];
         } else if (field.type === "select") {
-          scannedData[field.name] = result[field.name].find((value) => {
+          details[field.name] = result[field.name].find((value) => {
             return field.options.includes(value);
           });
         }
       } else {
-        scannedData[field.name] = result[field.name];
+        details[field.name] = result[field.name];
       }
     }
 
