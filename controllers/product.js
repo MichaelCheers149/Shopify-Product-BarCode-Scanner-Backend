@@ -32,15 +32,17 @@ const getDetails = async (req, res) => {
 
     res.json({
       message: "Success!",
-      artist,
-      title,
-      upc,
-      genre,
-      year,
-      recordLabel,
-      format,
-      country,
-      catalog,
+      data: {
+        artist,
+        title,
+        upc,
+        genre,
+        year,
+        recordLabel,
+        format,
+        country,
+        catalog,
+      },
     });
   } catch (error) {}
 };
