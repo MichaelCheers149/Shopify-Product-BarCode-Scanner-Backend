@@ -5,6 +5,7 @@ require("dotenv").config();
 const getDetails = async (req, res) => {
   const { upc } = req.body;
   if (!upc) return res.status(400).json({ message: "Incorrect UPC" });
+  console.log("getting product request for upc: ", upc);
   try {
     const { data } = await axios.default.get(
       `https://api.discogs.com/database/search?barcode=${upc}`,
@@ -22,6 +23,8 @@ const getDetails = async (req, res) => {
     if (!data.results.length) {
       res.status(400).json({ message: "Incorrect UPC!" });
     }
+
+    console.log("result: ", data.results[0]);
 
     const [artist, title] = data.results[0]["title"].split(" - ");
     const genre = data.results[0]["genre"];
@@ -59,6 +62,8 @@ const getDetails = async (req, res) => {
         scannedData[field.name] = result[field.name];
       }
     }
+
+    console.log("details: ", details);
 
     res.json({
       message: "Success!",
