@@ -30,6 +30,8 @@ const getDetails = async (req, res) => {
     const country = data.results[0]["country"];
     const catalog = data.results[0]["catno"];
 
+    console.log("result: ", data.results[0]);
+
     res.json({
       message: "Success!",
       data: {
