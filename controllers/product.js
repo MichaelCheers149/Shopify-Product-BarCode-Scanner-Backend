@@ -69,7 +69,10 @@ const getDetails = async (req, res) => {
       message: "Success!",
       details,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log("error: ", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 module.exports = { getDetails };
