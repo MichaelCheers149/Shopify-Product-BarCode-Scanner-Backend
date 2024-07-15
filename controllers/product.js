@@ -68,6 +68,7 @@ const getDetails = async (req, res) => {
     res.json({
       message: "Success!",
       details,
+      metafields,
     });
   } catch (error) {
     console.log("error: ", error);
