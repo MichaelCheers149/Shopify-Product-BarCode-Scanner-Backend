@@ -1,4 +1,5 @@
 const axios = require("axios");
+const metafields = require("../config/metafields");
 require("dotenv").config();
 
 const getDetails = async (req, res) => {
@@ -26,25 +27,42 @@ const getDetails = async (req, res) => {
     const genre = data.results[0]["genre"];
     const year = data.results[0]["year"];
     const recordLabel = data.results[0]["label"];
-    const category = data.results[0]["formats"][0]["name"];
+    const category = data.results[0]["format"].map((format) =>
+      format === "DVD" ? "DVDs" : format === "CD" ? "CDs" : format
+    );
     const country = data.results[0]["country"];
     const catalog = data.results[0]["catno"];
 
-    console.log("result: ", data.results[0]);
+    let result = {
+      artist,
+      title,
+      upc,
+      genre,
+      year,
+      recordLabel,
+      category,
+      country,
+      catalog,
+    };
+    let details = {};
+
+    for (let field of metafields) {
+      if (Array.isArray(result[field.name])) {
+        if (field.type === "string") {
+          scannedData[field.name] = result[field.name][0];
+        } else if (field.type === "select") {
+          scannedData[field.name] = result[field.name].find((value) => {
+            return field.options.includes(value);
+          });
+        }
+      } else {
+        scannedData[field.name] = result[field.name];
+      }
+    }
 
     res.json({
       message: "Success!",
-      data: {
-        artist,
-        title,
-        upc,
-        genre,
-        year,
-        recordLabel,
-        category,
-        country,
-        catalog,
-      },
+      details,
     });
   } catch (error) {}
 };
