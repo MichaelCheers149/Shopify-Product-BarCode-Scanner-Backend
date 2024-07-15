@@ -1,5 +1,6 @@
 const axios = require("axios");
 const metafields = require("../config/metafields");
+const Shopify = require("shopify-api-node");
 require("dotenv").config();
 
 const getDetails = async (req, res) => {
@@ -27,7 +28,9 @@ const getDetails = async (req, res) => {
     console.log("result: ", data.results[0]);
 
     const [artist, title] = data.results[0]["title"].split(" - ");
-    const genre = data.results[0]["genre"];
+    const genre = data.results[0]["genre"].map((genre) =>
+      genre === "Rock" || genre === "Pop" ? "Rock & Pop" : genre
+    );
     const year = data.results[0]["year"];
     const recordLabel = data.results[0]["label"];
     const format = data.results[0]["format"].map((format) =>
@@ -76,4 +79,17 @@ const getDetails = async (req, res) => {
   }
 };
 
-module.exports = { getDetails };
+const upload = async (req, res) => {
+  const shopify = new Shopify({
+    shopName: process.env.SHOP_NAME,
+    apiKey: process.env.SHOPIFY_API_KEY,
+    password: process.env.SHOPIFY_API_PASSWORD,
+  });
+  try {
+    await shopify.product.create({});
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { getDetails, upload };
