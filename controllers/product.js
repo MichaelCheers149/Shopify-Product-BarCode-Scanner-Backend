@@ -2,11 +2,11 @@ const axios = require("axios");
 require("dotenv").config();
 
 const getDetails = async (req, res) => {
-  const { UPC } = req.body;
-  if (!UPC) return res.status(400).json({ message: "Incorrect UPC" });
+  const { upc } = req.body;
+  if (!upc) return res.status(400).json({ message: "Incorrect UPC" });
   try {
     const { data } = await axios.default.get(
-      `https://api.discogs.com/database/search?barcode=${UPC}`,
+      `https://api.discogs.com/database/search?barcode=${upc}`,
       {
         headers: {
           Authorization: `Discogs token=${process.env.DISCOGS_API_TOKEN}`,
@@ -23,7 +23,6 @@ const getDetails = async (req, res) => {
     }
 
     const [artist, title] = data.results[0]["title"].split(" - ");
-    const upc = UPC;
     const genre = data.results[0]["genre"];
     const year = data.results[0]["year"];
     const recordLabel = data.results[0]["label"];
