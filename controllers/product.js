@@ -98,6 +98,7 @@ const upload = async (req, res) => {
     });
     console.log("created: ", response);
   } catch (error) {
+    console.log("error: ", error);
     res.status(500).json({ message: "Server error" });
   }
 };
