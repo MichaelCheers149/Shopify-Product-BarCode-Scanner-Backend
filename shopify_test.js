@@ -7,7 +7,7 @@ const shopify = new Shopify({
 });
 
 shopify.product
-  .list({ fields: "title,custom.artist,custom.uploaded_by" })
+  .list({ fields: "title,metafield.custom.artist,custom.uploaded_by" })
   .then((res) => console.log("res: ", res))
   .catch((err) => console.log("err: ", err));
 
