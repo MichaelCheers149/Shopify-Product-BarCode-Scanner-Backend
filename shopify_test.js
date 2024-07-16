@@ -7,7 +7,7 @@ const shopify = new Shopify({
 });
 
 shopify.product
-  .list({ fields: "title,metafields" })
+  .list({})
   .then((res) => console.log("res: ", res))
   .catch((err) => console.log("err: ", err));
 
