@@ -102,6 +102,7 @@ const getProducts = async (req, res) => {
   try {
     const products = await shopify.product.list();
     console.log("products: ", products);
+    res.json({ message: "Success!", products });
   } catch (error) {
     console.log("error: ", error);
     res.status(500).json({ message: "Server error" });
