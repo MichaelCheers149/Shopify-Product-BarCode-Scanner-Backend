@@ -92,4 +92,20 @@ const upload = async (req, res) => {
   }
 };
 
-module.exports = { getDetails, upload };
+const getProducts = async (req, res) => {
+  const shopify = new Shopify({
+    shopName: process.env.SHOP_NAME,
+    apiKey: process.env.SHOPIFY_API_KEY,
+    password: process.env.SHOPIFY_API_PASSWORD,
+  });
+
+  try {
+    const products = await shopify.product.list();
+    console.log("products: ", products);
+  } catch (error) {
+    console.log("error: ", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { getDetails, upload, getProducts };
