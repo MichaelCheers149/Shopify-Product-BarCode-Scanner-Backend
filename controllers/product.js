@@ -92,9 +92,7 @@ const upload = async (req, res) => {
     const response = await shopify.product.create({
       title: req.body.title,
       category: req.body.format,
-      metafields: {
-        artist: req.body.artist,
-      },
+      artist: req.body.artist,
     });
     console.log("created: ", response);
   } catch (error) {
