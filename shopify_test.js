@@ -6,10 +6,10 @@ const shopify = new Shopify({
   accessToken: process.env.SHOPIFY_API_TOKEN,
 });
 
-shopify.product
-  .list({ ids: "9493177172250,9501115547930" })
-  .then((res) => console.log("res: ", res))
-  .catch((err) => console.log("err: ", err));
+// shopify.product
+//   .list({ ids: "9493177172250,9501115547930" })
+//   .then((res) => console.log("res: ", res))
+//   .catch((err) => console.log("err: ", err));
 
 // shopify.metafield
 //   .list({
@@ -20,3 +20,8 @@ shopify.product
 //   })
 //   .then((res) => console.log("res: ", res))
 //   .catch((err) => console.log("err: ", err));
+
+shopify.collectionListing
+  .list()
+  .then((res) => console.log("res: ", res))
+  .catch((err) => console.log("err: ", err));

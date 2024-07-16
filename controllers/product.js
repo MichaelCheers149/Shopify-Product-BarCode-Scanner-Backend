@@ -86,9 +86,16 @@ const getDetails = async (req, res) => {
 
 const upload = async (req, res) => {
   console.log("request: ", req.body);
+  let creatingData = {};
 
   try {
-    const response = await shopify.product.create({ title: req.body.title });
+    const response = await shopify.product.create({
+      title: req.body.title,
+      category: req.body.format,
+      metafields: {
+        artist: req.body.artist,
+      },
+    });
     console.log("created: ", response);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
