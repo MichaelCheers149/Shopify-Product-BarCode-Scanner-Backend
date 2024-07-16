@@ -3,6 +3,12 @@ const metafields = require("../config/metafields");
 const Shopify = require("shopify-api-node");
 require("dotenv").config();
 
+const shopify = new Shopify({
+  shopName: process.env.SHOP_NAME,
+  apiKey: process.env.SHOPIFY_API_KEY,
+  password: process.env.SHOPIFY_API_PASSWORD,
+});
+
 const getDetails = async (req, res) => {
   const { upc } = req.body;
   if (!upc) return res.status(400).json({ message: "Incorrect UPC" });
@@ -80,11 +86,6 @@ const getDetails = async (req, res) => {
 };
 
 const upload = async (req, res) => {
-  const shopify = new Shopify({
-    shopName: process.env.SHOP_NAME,
-    apiKey: process.env.SHOPIFY_API_KEY,
-    password: process.env.SHOPIFY_API_PASSWORD,
-  });
   try {
     await shopify.product.create({});
   } catch (error) {
@@ -93,14 +94,8 @@ const upload = async (req, res) => {
 };
 
 const getProducts = async (req, res) => {
-  const shopify = new Shopify({
-    shopName: process.env.SHOP_NAME,
-    apiKey: process.env.SHOPIFY_API_KEY,
-    password: process.env.SHOPIFY_API_PASSWORD,
-  });
-
   try {
-    const products = await shopify.product.list();
+    const products = await shopify.product.list({});
     console.log("products: ", products);
     res.json({ message: "Success!", products });
   } catch (error) {
