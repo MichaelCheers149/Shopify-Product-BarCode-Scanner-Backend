@@ -85,17 +85,19 @@ const getDetails = async (req, res) => {
 };
 
 const upload = async (req, res) => {
+  console.log("request: ", req.body);
+
   try {
-    await shopify.product.create({});
+    const response = await shopify.product.create({ title: req.body.title });
+    console.log("created: ", response);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
 
-const getProducts = async (req, res) => {
+const getAllProducts = async (req, res) => {
   try {
     const products = await shopify.product.list({});
-    console.log("products: ", products);
     res.json({ message: "Success!", products });
   } catch (error) {
     console.log("error: ", error);
@@ -103,4 +105,4 @@ const getProducts = async (req, res) => {
   }
 };
 
-module.exports = { getDetails, upload, getProducts };
+module.exports = { getDetails, upload, getAllProducts };
