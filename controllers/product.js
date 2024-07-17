@@ -65,9 +65,16 @@ const getDetails = async (req, res) => {
         if (!field.options) {
           details[field.name]["value"] = result[field.name][0];
         } else {
-          details[field.name]["value"] = result[field.name].find((value) => {
-            return field.options.includes(value);
-          });
+          if (field.isMetafield)
+            details[field.name]["value"] = result[field.name].filter(
+              (value) => {
+                return field.options.includes(value);
+              }
+            );
+          else
+            details[field.name]["value"] = result[field.name].find((value) => {
+              return field.options.includes(value);
+            });
         }
       } else {
         details[field.name]["value"] = result[field.name];
