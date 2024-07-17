@@ -81,9 +81,11 @@ const getDetails = async (req, res) => {
         }
       } else {
         if (!field.options) {
-          if (field.isMultiSelect)
-            details[field.name]["value"] = [result[field.name]];
-          else details[field.name]["value"] = result[field.name];
+          if (field.isMultiSelect) {
+            if (result[field.name])
+              details[field.name]["value"] = [result[field.name]];
+            else details[field.name]["value"] = [];
+          } else details[field.name]["value"] = result[field.name];
         } else {
           let value = field.options.find(
             (option) => option === result[field.name]
