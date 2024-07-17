@@ -86,7 +86,7 @@ module.exports = [
   {
     name: "product_size",
     label: "Size",
-    type: "list.single_line_text_field",
+    type: "single_line_text_field",
     isMetafield: true,
     options: ['12"', '10"', '7"'],
   },
@@ -112,7 +112,7 @@ module.exports = [
   {
     name: "cover_type",
     label: "Cover Type (Book)",
-    type: "list.single_line_text_field",
+    type: "single_line_text_field",
     isMetafield: true,
     options: ["Hardcover", "Softcover"],
   },
@@ -131,7 +131,7 @@ module.exports = [
   {
     name: "autographed",
     label: "Autographed",
-    type: "list.single_line_text_field",
+    type: "single_line_text_field",
     isMetafield: true,
     options: ["Yes", "No"],
   },
