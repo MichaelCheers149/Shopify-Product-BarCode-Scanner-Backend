@@ -91,18 +91,20 @@ const upload = async (req, res) => {
   let creatingData = { metafields: [] };
 
   detailFields.forEach((field) => {
-    if (field["isMetafield"]) {
-      creatingData["metafields"] = [
-        ...creatingData["metafields"],
-        {
-          key: details[field.name]["name"],
-          value: details[field.name]["value"],
-          type: details[field.name]["type"],
-          namespace: "custom",
-        },
-      ];
-    } else {
-      creatingData[field.name] = details[field.name]["value"];
+    if (details[field.name]["value"]) {
+      if (field["isMetafield"]) {
+        creatingData["metafields"] = [
+          ...creatingData["metafields"],
+          {
+            key: details[field.name]["name"],
+            value: details[field.name]["value"],
+            type: details[field.name]["type"],
+            namespace: "custom",
+          },
+        ];
+      } else {
+        creatingData[field.name] = details[field.name]["value"];
+      }
     }
   });
 
