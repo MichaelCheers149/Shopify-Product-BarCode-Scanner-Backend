@@ -10,9 +10,10 @@ const shopify = new Shopify({
 });
 
 const getDetails = async (req, res) => {
+  console.log("getting product details request: ", req.body);
   const { upc } = req.body;
   if (!upc) return res.status(400).json({ message: "Incorrect UPC" });
-  console.log("getting product request for upc: ", upc);
+
   try {
     const { data } = await axios.default.get(
       `https://api.discogs.com/database/search?barcode=${upc}`,
@@ -30,8 +31,6 @@ const getDetails = async (req, res) => {
     if (data.results.length === 0) {
       res.status(400).json({ message: "Incorrect UPC!" });
     }
-
-    console.log("result: ", data.results[0]);
 
     const [artist, title] = data.results[0]["title"].split(" - ");
     const genre_ = data.results[0]["genre"].map((genre) =>
@@ -97,8 +96,6 @@ const getDetails = async (req, res) => {
       }
     }
 
-    console.log("details: ", details);
-
     res.json({
       message: "Success!",
       details,
@@ -110,6 +107,7 @@ const getDetails = async (req, res) => {
 };
 
 const upload = async (req, res) => {
+  console.log("uploading product request: ", req.body);
   const details = req.body;
   const authHeader = req.get("Authorization");
   const token = authHeader.split(" ")[1];
@@ -148,11 +146,8 @@ const upload = async (req, res) => {
     }
   });
 
-  console.log("creatingData: ", creatingData);
-
   try {
     const response = await shopify.product.create(creatingData);
-    console.log("created: ", response);
     res.json({ message: "Success!", createdProduct: response });
   } catch (error) {
     console.log("error: ", error);

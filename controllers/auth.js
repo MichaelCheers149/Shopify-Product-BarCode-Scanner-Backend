@@ -4,6 +4,7 @@ const User = require("../models/users");
 
 const signup = async (req, res) => {
   // checks if email already exists
+  console.log("signup request: ", req.body);
   let dbUser = await User.findOne({
     email: req.body.email,
   });
@@ -67,6 +68,7 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log("login request: ", req.body);
   try {
     let dbUser = await User.findOne({
       email: req.body.usernameOrEmail,
