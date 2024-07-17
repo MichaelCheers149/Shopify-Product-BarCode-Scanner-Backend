@@ -61,11 +61,14 @@ const getDetails = async (req, res) => {
 
     for (let field of detailFields) {
       details[field.name] = field;
+
       if (Array.isArray(result[field.name])) {
         if (!field.options) {
-          details[field.name]["value"] = result[field.name][0];
+          if (field.isMultiSelect)
+            details[field.name]["value"] = [result[field.name][0]];
+          else details[field.name]["value"] = result[field.name][0];
         } else {
-          if (field.isMetafield)
+          if (field.isMultiSelect)
             details[field.name]["value"] = result[field.name].filter(
               (value) => {
                 return field.options.includes(value);
@@ -77,7 +80,17 @@ const getDetails = async (req, res) => {
             });
         }
       } else {
-        details[field.name]["value"] = result[field.name];
+        if (!field.options) {
+          if (field.isMultiSelect)
+            details[field.name]["value"] = [result[field.name]];
+          else details[field.name]["value"] = result[field.name];
+        } else {
+          let value = field.options.find(
+            (option) => option === result[field.name]
+          );
+          if (field.isMultiSelect) details[field.name]["value"] = [value];
+          else details[field.name]["value"] = value;
+        }
       }
     }
 

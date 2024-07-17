@@ -53,6 +53,7 @@ module.exports = [
     label: "Genre",
     type: "list.single_line_text_field",
     isMetafield: true,
+    isMultiSelect: true,
     options: [
       "Rock & Pop",
       "Heavy Metal",
@@ -79,6 +80,7 @@ module.exports = [
     label: "Vinyl grade / Condition",
     type: "list.single_line_text_field",
     isMetafield: true,
+    isMultiSelect: true,
     options: ["Sealed", "NM", "EX", "VG++", "VG+", "VG", "New", "Used"],
   },
   {
@@ -103,8 +105,9 @@ module.exports = [
   {
     name: "release_year",
     label: "Release year / Year",
-    type: "number_integer",
+    type: "list.number_integer",
     isMetafield: true,
+    isMultiSelect: true,
   },
   {
     name: "cover_type",
