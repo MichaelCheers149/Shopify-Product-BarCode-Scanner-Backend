@@ -26,7 +26,7 @@ const getDetails = async (req, res) => {
       return res.status(500).json({ message: "Server error!" });
     }
 
-    if (!data.results.length) {
+    if (data.results.length === 0) {
       res.status(400).json({ message: "Incorrect UPC!" });
     }
 
