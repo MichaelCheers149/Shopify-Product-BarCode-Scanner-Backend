@@ -1,5 +1,5 @@
 const axios = require("axios");
-const metafields = require("../config/metafields");
+const detailFields = require("../config/details");
 const Shopify = require("shopify-api-node");
 require("dotenv").config();
 
@@ -33,41 +33,44 @@ const getDetails = async (req, res) => {
     console.log("result: ", data.results[0]);
 
     const [artist, title] = data.results[0]["title"].split(" - ");
-    const genre = data.results[0]["genre"].map((genre) =>
+    const genre_ = data.results[0]["genre"].map((genre) =>
       genre === "Rock" || genre === "Pop" ? "Rock & Pop" : genre
     );
-    const year = data.results[0]["year"];
-    const recordLabel = data.results[0]["label"];
-    const format = data.results[0]["format"].map((format) =>
+    const release_year = data.results[0]["year"];
+    const record_label = data.results[0]["label"];
+    const vendor = data.results[0]["label"];
+    const product_type = data.results[0]["format"].map((format) =>
       format === "DVD" ? "DVDs" : format === "CD" ? "CDs" : format
     );
-    const country = data.results[0]["country"];
+    const country_of_manufacture = data.results[0]["country"];
     const catalog = data.results[0]["catno"];
 
     let result = {
       artist,
       title,
-      upc,
-      genre,
-      year,
-      recordLabel,
-      format,
-      country,
+      upc_: upc,
+      vendor,
+      genre_,
+      release_year,
+      record_label,
+      product_type,
+      country_of_manufacture,
       catalog,
     };
     let details = {};
 
-    for (let field of metafields) {
+    for (let field of detailFields) {
+      details[field.name] = field;
       if (Array.isArray(result[field.name])) {
-        if (field.type === "string") {
-          details[field.name] = result[field.name][0];
-        } else if (field.type === "select") {
-          details[field.name] = result[field.name].find((value) => {
+        if (!field.options) {
+          details[field.name]["value"] = result[field.name][0];
+        } else {
+          details[field.name]["value"] = result[field.name].find((value) => {
             return field.options.includes(value);
           });
         }
       } else {
-        details[field.name] = result[field.name];
+        details[field.name]["value"] = result[field.name];
       }
     }
 
@@ -76,7 +79,6 @@ const getDetails = async (req, res) => {
     res.json({
       message: "Success!",
       details,
-      metafields,
     });
   } catch (error) {
     console.log("error: ", error);
@@ -85,31 +87,29 @@ const getDetails = async (req, res) => {
 };
 
 const upload = async (req, res) => {
-  console.log("request: ", req.body);
-  let creatingData = {};
+  const details = req.body;
+  let creatingData = { metafields: [] };
+
+  detailFields.forEach((field) => {
+    if (field["isMetafield"]) {
+      creatingData["metafields"] = [
+        ...creatingData["metafields"],
+        {
+          key: details[field.name]["name"],
+          value: details[field.name]["value"],
+          type: details[field.name]["type"],
+          namespace: "custom",
+        },
+      ];
+    } else {
+      creatingData[field.name] = details[field.name]["value"];
+    }
+  });
+
+  console.log("creatingData: ", creatingData);
 
   try {
-    const response = await shopify.product.create({
-      title: req.body.title,
-      metafields: [
-        {
-          key: "artist",
-          value: req.body.artist,
-        },
-        {
-          key: "title",
-          value: req.body.title,
-        },
-        {
-          key: "upc",
-          value: req.body.upc,
-        },
-        {
-          key: "genre",
-          value: req.body.genre,
-        },
-      ],
-    });
+    const response = await shopify.product.create(creatingData);
     console.log("created: ", response);
   } catch (error) {
     console.log("error: ", error);
