@@ -126,15 +126,17 @@ const upload = async (req, res) => {
 
   detailFields.forEach((field) => {
     if (details[field.name]["value"]) {
+      let value = details[field.name]["value"];
+      if (Array.isArray(value)) {
+        value = value.filter((value) => value && value !== "");
+        value = JSON.stringify(value);
+      }
       if (field["isMetafield"]) {
         creatingData["metafields"] = [
           ...creatingData["metafields"],
           {
             key: details[field.name]["name"],
-            value:
-              typeof details[field.name]["value"] === "object"
-                ? JSON.stringify(details[field.name]["value"])
-                : details[field.name]["value"],
+            value: value,
             type: details[field.name]["type"],
             namespace: "custom",
           },
