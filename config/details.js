@@ -51,7 +51,7 @@ module.exports = [
   {
     name: "genre_",
     label: "Genre",
-    type: "single_line_text_field",
+    type: "list.single_line_text_field",
     isMetafield: true,
     options: [
       "Rock & Pop",
@@ -77,14 +77,14 @@ module.exports = [
   {
     name: "vinyl_grade",
     label: "Vinyl grade / Condition",
-    type: "single_line_text_field",
+    type: "list.single_line_text_field",
     isMetafield: true,
     options: ["Sealed", "NM", "EX", "VG++", "VG+", "VG", "New", "Used"],
   },
   {
     name: "product_size",
     label: "Size",
-    type: "single_line_text_field",
+    type: "list.single_line_text_field",
     isMetafield: true,
     options: ['12"', '10"', '7"'],
   },
@@ -109,14 +109,14 @@ module.exports = [
   {
     name: "cover_type",
     label: "Cover Type (Book)",
-    type: "number_integer",
+    type: "list.single_line_text_field",
     isMetafield: true,
     options: ["Hardcover", "Softcover"],
   },
   {
     name: "edition",
     label: "Edition (Book)",
-    type: "number_integer",
+    type: "single_line_text_field",
     isMetafield: true,
   },
   {
@@ -128,7 +128,7 @@ module.exports = [
   {
     name: "autographed",
     label: "Autographed",
-    type: "single_line_text_field",
+    type: "list.single_line_text_field",
     isMetafield: true,
     options: ["Yes", "No"],
   },

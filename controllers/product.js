@@ -97,7 +97,10 @@ const upload = async (req, res) => {
           ...creatingData["metafields"],
           {
             key: details[field.name]["name"],
-            value: details[field.name]["value"],
+            value:
+              typeof details[field.name]["value"] === "object"
+                ? JSON.stringify(details[field.name]["value"])
+                : details[field.name]["value"],
             type: details[field.name]["type"],
             namespace: "custom",
           },
