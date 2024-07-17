@@ -153,6 +153,7 @@ const upload = async (req, res) => {
   try {
     const response = await shopify.product.create(creatingData);
     console.log("created: ", response);
+    res.json({ message: "Success!", createdProduct: response });
   } catch (error) {
     console.log("error: ", error);
     res.status(500).json({ message: "Server error" });
