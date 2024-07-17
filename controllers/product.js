@@ -1,6 +1,7 @@
 const axios = require("axios");
 const detailFields = require("../config/details");
 const Shopify = require("shopify-api-node");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const shopify = new Shopify({
