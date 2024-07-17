@@ -88,7 +88,19 @@ const getDetails = async (req, res) => {
 
 const upload = async (req, res) => {
   const details = req.body;
-  let creatingData = { metafields: [] };
+  const authHeader = req.get("Authorization");
+  const token = authHeader.split(" ")[1];
+  decodedToken = jwt.verify(token, "secret");
+  let creatingData = {
+    metafields: [
+      {
+        key: "uploaded_by",
+        value: decodedToken.username,
+        type: "single_line_text_field",
+        namespace: "custom",
+      },
+    ],
+  };
 
   detailFields.forEach((field) => {
     if (details[field.name]["value"]) {
