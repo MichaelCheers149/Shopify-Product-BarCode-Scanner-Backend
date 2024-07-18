@@ -115,13 +115,15 @@ const isAuth = (req, res) => {
     return res.status(401).json({ message: "Authentication failed!" });
   }
   const token = authHeader.split(" ")[1];
+  console.log("token: ", token);
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, "secret");
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ message: "Authentication failed!" });
   }
-  if (!decodedToken) {
+  if (!decodedToken || !decodedToken.username) {
     res.status(401).json({ message: "Authentication failed!" });
   } else {
     res.json({ message: "Success!" });
