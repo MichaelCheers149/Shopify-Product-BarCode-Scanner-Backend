@@ -110,7 +110,7 @@ const login = async (req, res) => {
 };
 
 const isAuth = (req, res) => {
-  const authHeader = req.get("Authentication failed!");
+  const authHeader = req.get("Authentication");
   if (!authHeader) {
     return res.status(401).json({ message: "Authentication failed!" });
   }
