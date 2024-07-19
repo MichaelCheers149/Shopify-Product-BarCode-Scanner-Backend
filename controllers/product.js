@@ -105,7 +105,7 @@ const getDetails = async (req, res) => {
     });
 
     res.json({
-      message: "Success!",
+      message: "Successed in getting product details!",
       productDetails,
     });
   } catch (error) {
@@ -170,7 +170,7 @@ const upload = async (req, res) => {
     }
   }
 
-  res.json({ message: "Success!", successed, failed });
+  res.json({ message: "Successfully uploaded!", successed, failed });
 };
 
 const getAllProducts = async (req, res) => {

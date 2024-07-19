@@ -95,7 +95,7 @@ const login = async (req, res) => {
           });
           res
             .status(200)
-            .json({ message: "Successfully logged in", token: token });
+            .json({ message: "Successfully logged in!", token: token });
         } else {
           // password doesnt match
           res.status(401).json({ message: "Incorrect Password" });
@@ -112,17 +112,17 @@ const login = async (req, res) => {
 const isAuth = (req, res) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
-    return res.status(401).json({ message: "Authentication failed!" });
+    return res.status(401).json({ message: "Expired credentials!" });
   }
   const token = authHeader.split(" ")[1];
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, "secret");
   } catch (err) {
-    return res.status(401).json({ message: "Authentication failed!" });
+    return res.status(401).json({ message: "Expired credentials!" });
   }
   if (!decodedToken || !decodedToken.username) {
-    res.status(401).json({ message: "Authentication failed!" });
+    res.status(401).json({ message: "Expired credentials!" });
   } else {
     res.json({ message: "Success!" });
   }
@@ -131,17 +131,17 @@ const isAuth = (req, res) => {
 const getRole = async (req, res) => {
   const authHeader = req.get("Authorization");
   if (!authHeader) {
-    return res.status(401).json({ message: "Authentication failed!" });
+    return res.status(401).json({ message: "Expired credentials!" });
   }
   const token = authHeader.split(" ")[1];
   let decodedToken;
   try {
     decodedToken = jwt.verify(token, "secret");
   } catch (err) {
-    return res.status(500).json({ message: "Authentication failed!" });
+    return res.status(500).json({ message: "Expired credentials!" });
   }
   if (!decodedToken) {
-    res.status(401).json({ message: "Authentication failed!" });
+    res.status(401).json({ message: "Expired credentials!" });
   } else {
     let user = await User.findOne({ username: decodedToken?.username });
     res.json({ message: "Success!", role: user.role });
