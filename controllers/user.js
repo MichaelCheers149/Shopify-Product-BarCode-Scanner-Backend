@@ -1,17 +1,36 @@
 const User = require("../models/users");
 const roles = require("../config/role");
+const Product = require("../models/products");
 
-const getUsers = async (req, res) => {
+const getUsers = async (_, res) => {
   try {
     let users = await User.find({});
+    let products = await Product.find({});
+
     users = users
       .filter((user) => user.role !== roles.admin)
-      .map((user) => ({
-        id: user._id,
-        username: user.username,
-        role: user.role,
-        email: user.email,
-      }));
+      .map((user) => {
+        let productsCount = 0;
+        let i = 0;
+        while (true) {
+          if (i === products.length) break;
+          if (products[i].uploadedBy === user._id) {
+            productsCount++;
+            products.splice(i, 1);
+          } else {
+            i++;
+          }
+        }
+
+        return {
+          id: user._id,
+          username: user.username,
+          role: user.role,
+          email: user.email,
+          products: productsCount,
+        };
+      });
+
     res.json({ message: "Success!", users });
   } catch (error) {
     console.log("error", error);

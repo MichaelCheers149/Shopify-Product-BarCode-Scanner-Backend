@@ -31,7 +31,7 @@ const getDetails = async (req, res) => {
     }
 
     if (data.results.length === 0) {
-      res.status(400).json({ message: "Incorrect UPC!" });
+      return res.status(400).json({ message: "Incorrect UPC!" });
     }
 
     let productDetails = data.results.map((result) => {
@@ -101,16 +101,18 @@ const getDetails = async (req, res) => {
         }
       }
 
+      details["id"] = result["id"];
+
       return details;
     });
 
-    res.json({
+    return res.json({
       message: "Successed in getting product details!",
       productDetails,
     });
   } catch (error) {
     console.log("error: ", error);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -162,22 +164,26 @@ const upload = async (req, res) => {
 
     try {
       const response = await shopify.product.create(creatingData);
-      await Product.create({ productId: response.id, uploadedBy: user._id });
-      successed.push({ ...creatingData, id: response.id });
+      await Product.create({
+        productId: response.id,
+        discogsId: details.id,
+        uploadedBy: user._id,
+      });
+      successed.push({ discogsId: details.id, id: response.id });
     } catch (error) {
       console.log("error: ", error);
-      failed.push(creatingData);
+      failed.push({ discogsId: details.id });
     }
   }
 
-  res.json({
+  return res.json({
     message: `${successed.length} products have been successfully uploaded!`,
     successed,
     failed,
   });
 };
 
-const getAllProducts = async (req, res) => {
+const getProducts = async (req, res) => {
   const authHeader = req.get("Authorization");
   const token = authHeader.split(" ")[1];
   const decodedToken = jwt.verify(token, "secret");
@@ -192,11 +198,11 @@ const getAllProducts = async (req, res) => {
         await Product.findByIdAndDelete(product._id);
       }
     }
-    res.json({ message: "Success!", products });
+    return res.json({ message: "Success!", products });
   } catch (error) {
     console.log("error: ", error);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-module.exports = { getDetails, upload, getAllProducts };
+module.exports = { getDetails, upload, getProducts };

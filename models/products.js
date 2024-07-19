@@ -10,6 +10,10 @@ const productsSchema = new mongoose.Schema({
     ref: "users",
     required: true,
   },
+  discogsId: {
+    type: String,
+    required: true,
+  },
 });
 
 const Products = mongoose.model("products", productsSchema);
