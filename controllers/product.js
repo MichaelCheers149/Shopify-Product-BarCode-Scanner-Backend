@@ -35,18 +35,18 @@ const getDetails = async (req, res) => {
     }
 
     let productDetails = data.results.map((result) => {
-      const [artist, title] = result["title"].split(" - ");
-      const genre_ = result["genre"].map((genre) =>
+      let [artist, title] = result["title"].split(" - ");
+      let genre_ = result["genre"].map((genre) =>
         genre === "Rock" || genre === "Pop" ? "Rock & Pop" : genre
       );
-      const release_year = result["year"];
-      const record_label = result["label"];
-      const vendor = result["label"];
-      const product_type = result["format"].map((format) =>
+      let release_year = result["year"];
+      let record_label = result["label"];
+      let vendor = result["label"];
+      let product_type = result["format"].map((format) =>
         format === "DVD" ? "DVDs" : format === "CD" ? "CDs" : format
       );
-      const country_of_manufacture = result["country"];
-      const catalog = result["catno"];
+      let country_of_manufacture = result["country"];
+      let catalog = result["catno"];
 
       let filteredData = {
         artist,
@@ -63,7 +63,7 @@ const getDetails = async (req, res) => {
       let details = {};
 
       for (let field of detailFields) {
-        details[field.name] = field;
+        details[field.name] = { ...field };
 
         if (Array.isArray(filteredData[field.name])) {
           if (!field.options) {
@@ -170,7 +170,11 @@ const upload = async (req, res) => {
     }
   }
 
-  res.json({ message: "Successfully uploaded!", successed, failed });
+  res.json({
+    message: `${successed.length} products have been successfully uploaded!`,
+    successed,
+    failed,
+  });
 };
 
 const getAllProducts = async (req, res) => {

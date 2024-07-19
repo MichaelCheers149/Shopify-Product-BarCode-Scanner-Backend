@@ -11,13 +11,13 @@ require("./config/db")();
 
 const app = express();
 
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-
 app.use(bodyParser.json());
-app.use(cors(corsOptions));
+app.use(
+  cors((data, next) => {
+    console.log("ip: ", data.ip);
+    next();
+  })
+);
 
 app.use("/auth", authRouter);
 app.use("/user", isAdmin, userRouter);
