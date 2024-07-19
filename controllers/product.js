@@ -189,15 +189,21 @@ const getProducts = async (req, res) => {
   const decodedToken = jwt.verify(token, "secret");
   let user = await User.findOne({ username: decodedToken?.username });
   let uploadedProducts = await Product.find({ uploadedBy: user._id });
+  if (uploadedProducts.length === 0) {
+    return res.json({ message: "Success!", products: [] });
+  }
   let ids = uploadedProducts.map((product) => product.productId);
 
   try {
     const products = await shopify.product.list({ ids: ids.join(",") });
+
     for (let product of uploadedProducts) {
-      if (!products.find((p) => p.id === product.productId)) {
+      if (!products.find((p) => p.id.toString() === product.productId)) {
         await Product.findByIdAndDelete(product._id);
       }
     }
+
+    console.log("products: ", products);
     return res.json({ message: "Success!", products });
   } catch (error) {
     console.log("error: ", error);
@@ -205,4 +211,16 @@ const getProducts = async (req, res) => {
   }
 };
 
-module.exports = { getDetails, upload, getProducts };
+const removeProduct = async (req, res) => {
+  const productId = req.params.productId;
+
+  try {
+    await shopify.product.delete(productId);
+    await Product.findOneAndDelete({ productId });
+    return res.json({ message: "Successfully removed!" });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error!" });
+  }
+};
+
+module.exports = { getDetails, upload, getProducts, removeProduct };

@@ -14,7 +14,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(
   cors((data, next) => {
-    console.log("ip: ", data.ip);
     next();
   })
 );

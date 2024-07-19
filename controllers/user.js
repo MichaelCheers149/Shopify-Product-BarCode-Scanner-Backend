@@ -8,13 +8,13 @@ const getUsers = async (_, res) => {
     let products = await Product.find({});
 
     users = users
-      .filter((user) => user.role !== roles.admin)
+
       .map((user) => {
         let productsCount = 0;
         let i = 0;
         while (true) {
           if (i === products.length) break;
-          if (products[i].uploadedBy === user._id) {
+          if (products[i].uploadedBy.equals(user._id)) {
             productsCount++;
             products.splice(i, 1);
           } else {
@@ -29,7 +29,8 @@ const getUsers = async (_, res) => {
           email: user.email,
           products: productsCount,
         };
-      });
+      })
+      .filter((user) => user.role !== roles.admin);
 
     res.json({ message: "Success!", users });
   } catch (error) {
