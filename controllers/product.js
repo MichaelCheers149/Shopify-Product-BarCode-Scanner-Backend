@@ -36,6 +36,7 @@ const getDetails = async (req, res) => {
 
     let productDetails = data.results.map((result) => {
       let [artist, title] = result["title"].split(" - ");
+      let images = [{ src: result["cover_image"] }];
       let genre_ = result["genre"].map((genre) =>
         genre === "Rock" || genre === "Pop" ? "Rock & Pop" : genre
       );
@@ -50,6 +51,7 @@ const getDetails = async (req, res) => {
 
       let filteredData = {
         artist,
+        images,
         title,
         upc_: upc,
         vendor,
@@ -68,8 +70,9 @@ const getDetails = async (req, res) => {
         if (Array.isArray(filteredData[field.name])) {
           if (!field.options) {
             if (field.isMultiSelect)
-              details[field.name]["value"] = [filteredData[field.name][0]];
-            else details[field.name]["value"] = filteredData[field.name][0];
+              details[field.name]["value"] = filteredData[field.name];
+            else
+              details[field.name]["value"] = filteredData[field.name][0] || "";
           } else {
             if (field.isMultiSelect)
               details[field.name]["value"] = filteredData[field.name].filter(
@@ -78,11 +81,10 @@ const getDetails = async (req, res) => {
                 }
               );
             else
-              details[field.name]["value"] = filteredData[field.name].find(
-                (value) => {
+              details[field.name]["value"] =
+                filteredData[field.name].find((value) => {
                   return field.options.includes(value);
-                }
-              );
+                }) || "";
           }
         } else {
           if (!field.options) {
@@ -90,13 +92,15 @@ const getDetails = async (req, res) => {
               if (filteredData[field.name])
                 details[field.name]["value"] = [filteredData[field.name]];
               else details[field.name]["value"] = [];
-            } else details[field.name]["value"] = filteredData[field.name];
+            } else
+              details[field.name]["value"] = filteredData[field.name] || "";
           } else {
             let value = field.options.find(
               (option) => option === filteredData[field.name]
             );
-            if (field.isMultiSelect) details[field.name]["value"] = [value];
-            else details[field.name]["value"] = value;
+            if (field.isMultiSelect)
+              details[field.name]["value"] = value ? [value] : [];
+            else details[field.name]["value"] = value || "";
           }
         }
       }
