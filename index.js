@@ -11,7 +11,7 @@ require("./config/db")();
 
 const app = express();
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(
   cors((data, next) => {
     next();

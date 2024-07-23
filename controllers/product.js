@@ -12,7 +12,6 @@ const shopify = new Shopify({
 });
 
 const getDetails = async (req, res) => {
-  console.log("getting product details request: ", req.body);
   const { upc } = req.body;
   if (!upc) return res.status(400).json({ message: "Incorrect UPC" });
 
@@ -121,7 +120,6 @@ const getDetails = async (req, res) => {
 };
 
 const upload = async (req, res) => {
-  console.log("uploading product request: ", req.body);
   const productDetailsList = req.body;
   const authHeader = req.get("Authorization");
   const token = authHeader.split(" ")[1];
@@ -141,6 +139,7 @@ const upload = async (req, res) => {
           namespace: "custom",
         },
       ],
+      variants: [{}],
     };
 
     detailFields.forEach((field) => {
@@ -160,6 +159,9 @@ const upload = async (req, res) => {
               namespace: "custom",
             },
           ];
+        } else if (field["isVariants"]) {
+          creatingData["variants"][0][field.name] =
+            details[field.name]["value"];
         } else {
           creatingData[field.name] = details[field.name]["value"];
         }
@@ -207,7 +209,6 @@ const getProducts = async (req, res) => {
       }
     }
 
-    console.log("products: ", products);
     return res.json({ message: "Success!", products });
   } catch (error) {
     console.log("error: ", error);

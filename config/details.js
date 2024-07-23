@@ -26,6 +26,31 @@ module.exports = [
   },
   { name: "vendor", label: "Vendor", type: "single_line_text_field" },
   {
+    name: "price",
+    label: "Price",
+    type: "number_decimal",
+    isVariants: true,
+  },
+  {
+    name: "inventory_quantity",
+    label: "Quantity",
+    type: "number_integer",
+    isVariants: true,
+  },
+  {
+    name: "weight",
+    label: "Weight",
+    type: "number_decimal",
+    isVariants: true,
+  },
+  {
+    name: "weight_unit",
+    label: "Weight unit",
+    type: "single_line_text_field",
+    isVariants: true,
+    options: ["lb", "oz", "kg", "g"],
+  },
+  {
     name: "artist",
     label: "Artist",
     type: "single_line_text_field",
