@@ -144,7 +144,8 @@ const getRole = async (req, res) => {
     res.status(401).json({ message: "Expired credentials!" });
   } else {
     let user = await User.findOne({ username: decodedToken?.username });
-    res.json({ message: "Success!", role: user.role });
+    if (user) res.json({ message: "Success!", role: user.role });
+    else res.status(401).json({ message: "Unregistered user!" });
   }
 };
 

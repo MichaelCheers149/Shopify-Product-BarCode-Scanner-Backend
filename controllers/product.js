@@ -51,7 +51,9 @@ const getDetails = async (req, res) => {
       let filteredData = {
         artist,
         images,
-        title,
+        title: `${artist} - ${title}${
+          release_year ? ` - ${release_year}` : ""
+        }`,
         upc_: upc,
         vendor,
         genre_,
@@ -189,6 +191,120 @@ const upload = async (req, res) => {
   });
 };
 
+const updateProduct = async (req, res) => {
+  const productId = req.params.productId;
+  const { key, detail } = req.body;
+  let updatingData = {
+    variants: [{}],
+  };
+  let metafield = null;
+
+  detailFields.forEach((field) => {
+    if (field.name === key) {
+      let value = detail["value"];
+      if (Array.isArray(value)) {
+        value = value.filter((value) => value && value !== "");
+        value = JSON.stringify(value);
+      }
+      if (field["isMetafield"]) {
+        metafield = {
+          value: value,
+          id: detail["id"],
+          product_id: productId,
+          type: detail["type"],
+        };
+      } else if (field["isVariants"]) {
+        updatingData["variants"][0][field.name] = detail["value"];
+      } else if (field.name === "images") {
+        updatingData[field.name] = detail["value"].map((image) =>
+          image["id"] ? { id: image["id"] } : image
+        );
+      } else {
+        updatingData[field.name] = detail["value"];
+      }
+    }
+  });
+
+  try {
+    await shopify.product.update(productId, updatingData);
+
+    if (metafield) {
+      await shopify.metafield.update(metafield.id, { value: metafield.value });
+    }
+
+    return res.json({ message: "Successfully updated!" });
+  } catch (error) {
+    console.log("error: ", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getProduct = async (req, res) => {
+  const authHeader = req.get("Authorization");
+  const token = authHeader.split(" ")[1];
+  const { username } = jwt.verify(token, "secret");
+  let user = await User.findOne({ username });
+  if (!user) {
+    return res
+      .status(401)
+      .json({ message: "Wrong credentials! Please login again.." });
+  }
+  const productId = req.params.productId;
+  let product = null;
+  try {
+    product = await shopify.product.get(productId);
+  } catch (error) {
+    console.log("product error: ", error);
+    return res.status(400).json({ message: "Incorrect product ID!" });
+  }
+  let metafields = [];
+  try {
+    metafields = await shopify.metafield.list({
+      metafield: { owner_resource: "product", owner_id: productId },
+    });
+
+    for (let metafield of metafields) {
+      if (metafield["key"] === "uploaded_by") {
+        if (metafield["value"] !== username) {
+          return res.status(400).json({ message: "Invalid product ID" });
+        }
+        break;
+      }
+    }
+  } catch (error) {
+    console.log("metafield error: ", error);
+    return res.status(400).json({ message: "Incorrect product ID!" });
+  }
+
+  let details = {};
+  for (let field of detailFields) {
+    details[field.name] = { ...field };
+
+    if (field.isMetafield) {
+      let metafield = metafields.find(
+        (metafield) => metafield["key"] === field["name"]
+      );
+
+      if (metafield) {
+        details[field.name]["value"] = metafield["value"];
+        details[field.name]["id"] = metafield["id"];
+      }
+    } else if (field.isVariants) {
+      details[field.name]["value"] = product["variants"][0][field.name];
+    } else {
+      details[field.name]["value"] = product[field.name];
+    }
+
+    if (
+      field.isMultiSelect &&
+      typeof details[field.name]["value"] === "string"
+    ) {
+      details[field.name]["value"] = JSON.parse(details[field.name]["value"]);
+    }
+  }
+  return res.json({ message: "Success!", details });
+};
+
 const getProducts = async (req, res) => {
   const authHeader = req.get("Authorization");
   const token = authHeader.split(" ")[1];
@@ -228,4 +344,11 @@ const removeProduct = async (req, res) => {
   }
 };
 
-module.exports = { getDetails, upload, getProducts, removeProduct };
+module.exports = {
+  getDetails,
+  upload,
+  getProducts,
+  removeProduct,
+  getProduct,
+  updateProduct,
+};
