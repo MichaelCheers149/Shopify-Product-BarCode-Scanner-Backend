@@ -32,16 +32,8 @@ const shopify = new Shopify({
 //   .catch((err) => console.log("err: ", err));
 
 shopify.product
-  .update(9521675403546, {
+  .update(9528741331226, {
     title: "Mexicano 777 - God's Assassins - 20020",
-    metafields: [
-      {
-        key: "artist",
-        value: "new artist",
-        type: "single_line_text_field",
-        namespace: "custom",
-      },
-    ],
   })
   .then((res) => console.log("res: ", res))
   .catch((err) => console.log("err: ", err));

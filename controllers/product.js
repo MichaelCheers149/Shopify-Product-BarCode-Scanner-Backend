@@ -141,7 +141,11 @@ const upload = async (req, res) => {
           namespace: "custom",
         },
       ],
-      variants: [{}],
+      variants: [
+        {
+          inventory_management: "shopify",
+        },
+      ],
     };
 
     detailFields.forEach((field) => {
@@ -195,7 +199,7 @@ const updateProduct = async (req, res) => {
   const productId = req.params.productId;
   const { key, detail } = req.body;
   let updatingData = {
-    variants: [{}],
+    variants: [{ inventory_management: "shopify" }],
   };
   let metafield = null;
 
