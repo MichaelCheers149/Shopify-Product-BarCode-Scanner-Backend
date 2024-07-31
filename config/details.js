@@ -4,6 +4,7 @@ module.exports = [
     label: "Title",
     type: "single_line_text_field",
   },
+  { name: "body_html", label: "Description", type: "rich_text_field" },
   { name: "images", label: "Images", type: "list.image", isMultiSelect: true },
   {
     name: "product_type",
