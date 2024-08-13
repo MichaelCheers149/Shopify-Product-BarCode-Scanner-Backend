@@ -13,7 +13,7 @@ const signup = async (req, res) => {
     return res.status(409).json({ message: "Email already exists!" });
   } else {
     dbUser = await User.findOne({
-      username: req.body.username,
+      username: req.body.username.toLocaleLowerCase(),
     });
     if (dbUser) {
       return res.status(409).json({ message: "Username already exists!" });
@@ -32,13 +32,13 @@ const signup = async (req, res) => {
             return res.status(500).json({ message: "Please try again!" });
           } else if (passwordHash) {
             return User.create({
-              email: req.body.email,
-              username: req.body.username,
+              email: req.body.email.toLocaleLowerCase(),
+              username: req.body.username.toLocaleLowerCase(),
               password: passwordHash,
             })
               .then(() => {
                 const token = jwt.sign(
-                  { username: req.body.username },
+                  { username: req.body.username.toLocaleLowerCase() },
                   "secret",
                   {
                     expiresIn: "24h",
@@ -71,12 +71,12 @@ const login = async (req, res) => {
   console.log("login request: ", req.body);
   try {
     let dbUser = await User.findOne({
-      email: req.body.usernameOrEmail,
+      email: req.body.usernameOrEmail.toLocaleLowerCase(),
     });
 
     if (!dbUser) {
       dbUser = await User.findOne({
-        username: req.body.usernameOrEmail,
+        username: req.body.usernameOrEmail.toLocaleLowerCase(),
       });
     }
 
